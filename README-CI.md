@@ -285,3 +285,14 @@ The updated message appeared on the Home page, confirming that the image publish
 ![Updated website](images/github-auto-update-home.png)
 
 This test confirms that pushing changes to the `main` branch automatically builds and publishes an updated Docker image to DockerHub.
+
+
+### Part 2 Workflow Permanent Link
+
+The following link points to the GitHub Actions workflow used in Part 2 of this project.
+
+[Part 2 - Docker Image CI Workflow](https://github.com/WSU-kduncan/ceg3120-cicd-gonzalezangoso2-f26/blob/ba43acf5fcf0aca37d5bb0f7a525f3e8c5c3bc9a/.github/workflows/docker-publish.yml)
+
+This version of the workflow builds and pushes the Docker image to DockerHub whenever changes are pushed to the `main` branch.
+
+I saved this permanent link before making changes for Part 3, so the original workflow can still be reviewed.
