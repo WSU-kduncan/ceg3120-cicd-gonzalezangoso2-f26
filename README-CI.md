@@ -186,3 +186,28 @@ I created a DockerHub PAT with Read & Write permissions. These secrets allow Git
 The following screenshot shows both repository secrets configured in GitHub.
 
 ![GitHub Actions repository secrets](images/github-secrets.png)
+
+
+### GitHub Actions Workflow
+
+I created a GitHub Actions workflow called `docker-publish.yml` to automatically build and push Docker images to DockerHub.
+
+The workflow is triggered when a commit is pushed to the `main` branch.
+
+The workflow performs these steps:
+
+1. Checks out the GitHub repository.
+2. Sets up Docker Buildx.
+3. Logs in to DockerHub using repository secrets.
+4. Builds the Docker image using the Dockerfile.
+5. Pushes the image to `ignaciooga/ceg3120-site:latest`.
+
+### Testing the Main Branch Trigger
+
+I pushed commit `19d9fce` to the `main` branch, which automatically triggered the workflow.
+
+After correcting the DockerHub authentication, I re-ran the workflow successfully.
+
+The following screenshot shows the successful execution of GitHub Actions, including the commit SHA and the `main` branch.
+
+![Successful GitHub Actions workflow](images/github-main-success.png)
