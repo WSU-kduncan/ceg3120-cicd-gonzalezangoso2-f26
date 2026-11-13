@@ -238,3 +238,50 @@ No new workflow run was triggered by the `test-no-ci` branch. Only the previous 
 This confirms that the workflow is correctly configured to run only when changes are pushed to the `main` branch.
 
 After completing the test, I switched back to `main` to continue working on the project.
+
+
+### Testing Automatic Docker Image Updates
+
+To test the automatic image publishing process, I updated the `index.html` file by adding the following message:
+
+"Update: This website is automatically published using GitHub Actions!"
+
+I committed the change and pushed it to the `main` branch.
+
+Commit: `7dec80b`
+
+GitHub Actions automatically started the Docker Image CI workflow. The workflow successfully built and pushed the updated Docker image to DockerHub.
+
+The following screenshot shows the successful workflow execution.
+
+![Automatic update workflow](images/github-auto-update-success.png)
+
+### Pulling the Updated Image
+
+After the workflow completed, I downloaded the updated image from DockerHub.
+
+Since my Mac uses ARM64 and the GitHub Actions image was built for AMD64, I specified the platform:
+
+```bash
+docker pull --platform linux/amd64 ignaciooga/ceg3120-site:latest
+```
+
+Then I started a new container using port 8082:
+
+```bash
+docker run -d --platform linux/amd64 --name ceg3120-updated -p 8082:80 ignaciooga/ceg3120-site:latest
+```
+
+I used `docker ps` to verify that the container was running.
+
+![Updated Docker container](images/github-auto-update-docker.png)
+
+### Verifying the Website Update
+
+I opened `http://localhost:8082/index.html` in my browser.
+
+The updated message appeared on the Home page, confirming that the image published by GitHub Actions contained my latest website changes.
+
+![Updated website](images/github-auto-update-home.png)
+
+This test confirms that pushing changes to the `main` branch automatically builds and publishes an updated Docker image to DockerHub.
