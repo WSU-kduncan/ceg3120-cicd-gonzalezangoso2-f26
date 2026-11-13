@@ -171,3 +171,18 @@ This screenshot shows the About page running from the same container, confirming
 
 Both pages worked correctly when running the published DockerHub image.
 
+
+## Part 2 - GitHub Actions and DockerHub
+
+### GitHub Repository Secrets
+
+I configured two repository secrets in GitHub Actions:
+
+- `DOCKER_USERNAME`: stores my DockerHub username.
+- `DOCKER_TOKEN`: stores my DockerHub Personal Access Token.
+
+I created a DockerHub PAT with Read & Write permissions. These secrets allow GitHub Actions to authenticate with DockerHub without exposing credentials in the workflow file.
+
+The following screenshot shows both repository secrets configured in GitHub.
+
+![GitHub Actions repository secrets](images/github-secrets.png)
