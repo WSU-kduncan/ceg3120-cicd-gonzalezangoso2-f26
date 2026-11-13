@@ -235,6 +235,10 @@ The following screenshot shows both repository secrets configured in GitHub.
 
 ![GitHub Actions repository secrets](images/github-secrets.png)
 
+To create the DockerHub Personal Access Token, I went to DockerHub Account Settings, opened Personal Access Tokens, and created a token with Read & Write permissions.
+
+Then, in my GitHub repository, I went to Settings > Secrets and variables > Actions and selected New repository secret. I added `DOCKER_USERNAME` with my DockerHub username and `DOCKER_TOKEN` with the access token.
+
 
 ### GitHub Actions Workflow
 
