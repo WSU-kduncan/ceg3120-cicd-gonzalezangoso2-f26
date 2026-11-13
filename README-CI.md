@@ -365,3 +365,46 @@ This confirms that semantic versioning works correctly and that older Docker ima
 I successfully configured GitHub Actions to automatically build and publish versioned Docker images to DockerHub.
 
 The workflow is now triggered by Git version tags instead of normal pushes to the `main` branch.
+
+
+### Testing the Tag Trigger
+
+I tested that the workflow only runs when a version tag is pushed.
+
+After pushing commit `1e96073` to `main` without creating a new version tag, I checked GitHub Actions.
+
+No new workflow execution appeared. The latest execution was still the successful `v1.1.0` release.
+
+![GitHub Actions without a new run](images/github-tag-negative-actions.png)
+
+![Commit without a version tag](images/github-tag-negative-commit.png)
+
+### Testing Docker Image Rollback
+
+I tested that both the previous and current Docker image versions could run independently.
+
+First, I downloaded and started version `1.0`:
+
+```bash
+docker pull --platform linux/amd64 ignaciooga/ceg3120-site:1.0
+docker run -d --platform linux/amd64 --name ceg3120-v1-0 -p 8083:80 ignaciooga/ceg3120-site:1.0
+```
+
+The website at `http://localhost:8083/index.html` displayed the original content without the version 1.1.0 section.
+
+![Docker version 1.0](images/docker-rollback-v1-0.png)
+
+Next, I downloaded and started version `1.1`:
+
+```bash
+docker pull --platform linux/amd64 ignaciooga/ceg3120-site:1.1
+docker run -d --platform linux/amd64 --name ceg3120-v1-1 -p 8084:80 ignaciooga/ceg3120-site:1.1
+```
+
+The website at `http://localhost:8084/index.html` included the new "What's New in Version 1.1.0" section.
+
+![Docker version 1.1](images/docker-rollback-v1-1.png)
+
+I also used `docker ps` to verify that both containers were running at the same time on different ports.
+
+This confirms that previous Docker image versions remain available and can be used for rollback.
