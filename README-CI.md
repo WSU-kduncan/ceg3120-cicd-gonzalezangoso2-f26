@@ -1,18 +1,70 @@
 # Project 6 - Continuous Integration
 
+
 ## Project Overview
 
-The goal of this project is to containerize a website using Docker and automate the process of building and publishing Docker images with GitHub Actions.
+The goal of this project is to automate the process of building and publishing Docker images using GitHub Actions.
+
+I created a website using HTML and CSS and used Docker to run it inside an Apache web server container.
 
 The main tools used are:
 
-- Git and GitHub: manage the project files and version history.
-- HTML and CSS: create the website.
-- Docker: build and run the website inside a container.
-- DockerHub: store the container images.
-- GitHub Actions: automate image builds and publishing.
+- Git and GitHub: manage source code, commits, and version tags.
+- VS Code: edit the website and project files.
+- Docker: build and run container images.
+- DockerHub: store and distribute the published images.
+- GitHub Actions: automatically build and publish images.
+- Docker metadata-action: generate semantic version tags.
 
-The website has been created and tested locally using Docker. The GitHub Actions workflow and DockerHub integration will be configured in the next parts of the project.
+### Continuous Integration Diagram
+
+The following diagram shows how changes in my local repository are published as Docker images.
+
+```mermaid
+flowchart TD
+    subgraph LOCAL["Local Repository - VS Code"]
+        A["Edit website files"]
+        B["Commit and push to main"]
+        C["Create and push version tag"]
+        A --> B --> C
+    end
+
+    subgraph GITHUB["GitHub and GitHub Actions"]
+        D["Version tag triggers workflow"]
+        E["Checkout repository"]
+        F["Set up Docker Buildx"]
+        G["Generate version tags"]
+        H["Login using GitHub Secrets"]
+        I["Build and push Docker image"]
+        D --> E --> F --> G --> H --> I
+    end
+
+    subgraph HUB["DockerHub"]
+        J["Store versioned Docker images"]
+        K["Pull and run selected version"]
+        J --> K
+    end
+
+    C --> D
+    I --> J
+```
+
+### How the Process Works
+
+First, I modify the website in VS Code and push the changes to GitHub.
+
+After creating and pushing a version tag, GitHub Actions starts the workflow automatically.
+
+The workflow generates semantic version tags, authenticates with DockerHub using repository secrets, and builds and publishes the Docker image.
+
+DockerHub stores the different versions so that an older version can be downloaded and used if necessary.
+
+Normal commits to `main` do not trigger the final workflow. Only version tags activate it.
+
+### Platform Compatibility
+
+The published images use the `linux/amd64` architecture. Since my Mac uses ARM64, I specify `--platform linux/amd64` when pulling and running these images locally.
+
 
 ## Part 1 - Docker Container Image
 
@@ -94,10 +146,6 @@ This screenshot shows the Home page served by the Docker container with CSS appl
 This screenshot shows the About page served by the Docker container, confirming that both HTML pages and the CSS work correctly.
 
 ![About page running in Docker](images/docker-local-about.png)
-
-## Resources
-
-- [CEG3120 Project 6 Instructions](https://github.com/pattonsgirl/CEG3120/tree/main/Projects/Project6) - Used to understand the requirements and project structure.
 
 
 ### Publishing the Image to DockerHub
@@ -316,6 +364,40 @@ The workflow uses the following tags:
 
 The generated tags and labels are passed to `docker/build-push-action@v7`, which builds and publishes the Docker image to DockerHub.
 
+### Part 3 GitHub Actions Workflow
+
+The final version of my GitHub Actions workflow is available here:
+
+[Part 3 - Docker Image CI Workflow](https://github.com/WSU-kduncan/ceg3120-cicd-gonzalezangoso2-f26/blob/main/.github/workflows/docker-publish.yml)
+
+This workflow automatically builds and publishes Docker images when a version tag is pushed to GitHub.
+
+### Checking Git Tags
+
+To check the existing version tags in my repository, I used:
+
+```bash
+git tag -l
+```
+
+This command lists the Git tags created in the repository, including `v1.0.0` and `v1.1.0`.
+
+The following screenshot shows the version tags created in my repository.
+
+![Git version tags](images/git-tags-list.png)
+
+### Using the Workflow in Another Repository
+
+To use this GitHub Actions workflow in another repository, I would need to make a few changes:
+
+- Copy the `docker-publish.yml` file into the new repository's `.github/workflows/` folder.
+- Update the DockerHub image name (`ignaciooga/ceg3120-site`) to match the new project.
+- Configure the repository secrets `DOCKER_USERNAME` and `DOCKER_TOKEN`.
+- Make sure the Dockerfile and website files are in the correct locations.
+- Create and push a version tag matching `v*.*.*` to trigger the workflow.
+
+After these changes, GitHub Actions would automatically build and publish the Docker image for the new repository.
+
 ### Publishing Version 1.0.0
 
 I created the first version using these commands:
@@ -408,3 +490,30 @@ The website at `http://localhost:8084/index.html` included the new "What's New i
 I also used `docker ps` to verify that both containers were running at the same time on different ports.
 
 This confirms that previous Docker image versions remain available and can be used for rollback.
+
+## Resources and References
+
+The following resources were used while completing this project:
+
+- [CEG3120 Project 6 Instructions](https://github.com/pattonsgirl/CEG3120/tree/main/Projects/Project6) - Used to understand the project requirements, documentation, and testing procedures.
+
+- [Docker Documentation](https://docs.docker.com/reference/dockerfile/) - Used as a reference for Dockerfile instructions and container images.
+
+- [Docker CI with GitHub Actions](https://docs.docker.com/build/ci/github-actions/) - Used as a reference for automating Docker image builds with GitHub Actions.
+
+- [GitHub Actions Documentation](https://docs.github.com/en/actions) - Used to understand workflows, triggers, and repository secrets.
+
+- [Docker Metadata Action](https://github.com/docker/metadata-action) - Used as a reference for generating Docker image tags with semantic versioning.
+
+- [Mermaid Documentation](https://mermaid.js.org/) - Used as a reference for documenting the continuous integration process with a flowchart.
+
+- [ChatGPT](https://chatgpt.com/) as a support tool during this project.
+
+    I mainly used it to help translate some explanations into English, find useful documentation and references, check that I had completed all the rubric requirements, and organize and improve the README documentation.
+
+    Some example prompts were:
+
+    - "Can you help me translate this into English?"
+    - "Where can I find documentation about Docker and GitHub Actions?"
+    - "Can you check if I have completed all the requirements in the rubric?"
+    - "Can you help me organize the README documentation?"
