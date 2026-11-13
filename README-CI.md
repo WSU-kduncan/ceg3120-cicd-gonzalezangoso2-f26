@@ -453,11 +453,9 @@ The `1.0` tag still points to the previous image with a different digest.
 
 This confirms that semantic versioning works correctly and that older Docker image versions remain available.
 
-### Conclusion
+The Docker images and their different version tags are available in my DockerHub repository:
 
-I successfully configured GitHub Actions to automatically build and publish versioned Docker images to DockerHub.
-
-The workflow is now triggered by Git version tags instead of normal pushes to the `main` branch.
+[View DockerHub Image Versions](https://hub.docker.com/r/ignaciooga/ceg3120-site/tags)
 
 
 ### Testing the Tag Trigger
@@ -501,6 +499,12 @@ The website at `http://localhost:8084/index.html` included the new "What's New i
 I also used `docker ps` to verify that both containers were running at the same time on different ports.
 
 This confirms that previous Docker image versions remain available and can be used for rollback.
+
+### Conclusion
+
+I successfully configured GitHub Actions to automatically build and publish versioned Docker images to DockerHub.
+
+The workflow is now triggered by Git version tags instead of normal pushes to the `main` branch.
 
 ## Resources and References
 
