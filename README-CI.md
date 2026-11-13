@@ -296,3 +296,72 @@ The following link points to the GitHub Actions workflow used in Part 2 of this 
 This version of the workflow builds and pushes the Docker image to DockerHub whenever changes are pushed to the `main` branch.
 
 I saved this permanent link before making changes for Part 3, so the original workflow can still be reviewed.
+
+
+## Part 3 - Semantic Versioning
+
+### Configuring Semantic Versioning
+
+In this part, I modified the GitHub Actions workflow to use semantic versioning for Docker images.
+
+Instead of running on every push to `main`, the workflow now runs when a version tag matching `v*.*.*` is pushed to GitHub.
+
+I added `docker/metadata-action@v6` to automatically generate Docker image tags based on the Git version.
+
+The workflow uses the following tags:
+
+- `1`: major version.
+- `1.0` or `1.1`: major and minor version.
+- `latest`: most recently published version.
+
+The generated tags and labels are passed to `docker/build-push-action@v7`, which builds and publishes the Docker image to DockerHub.
+
+### Publishing Version 1.0.0
+
+I created the first version using these commands:
+
+```bash
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin v1.0.0
+```
+
+Pushing this tag automatically triggered the GitHub Actions workflow.
+
+The workflow completed successfully and published the image with the tags `1`, `1.0`, and `latest`.
+
+![GitHub Actions v1.0.0](images/github-semver-v1-success.png)
+
+![DockerHub v1.0.0 tags](images/dockerhub-semver-v1-tags.png)
+
+### Publishing Version 1.1.0
+
+For the second version, I modified `web-content/index.html` to add a new section called "What's New in Version 1.1.0".
+
+After committing and pushing the change to `main`, I created and published the new version:
+
+```bash
+git tag -a v1.1.0 -m "Release version 1.1.0"
+git push origin v1.1.0
+```
+
+GitHub Actions automatically built and published the updated Docker image.
+
+![GitHub Actions v1.1.0](images/github-semver-v1-1-success.png)
+
+![DockerHub v1.1.0 tags](images/dockerhub-semver-v1-1-tags.png)
+
+### Verifying Docker Image Versions
+
+After publishing version 1.1.0, I checked the DockerHub repository.
+
+The tags `latest`, `1`, and `1.1` point to the new version and share the same digest.
+
+The `1.0` tag still points to the previous image with a different digest.
+
+This confirms that semantic versioning works correctly and that older Docker image versions remain available.
+
+### Conclusion
+
+I successfully configured GitHub Actions to automatically build and publish versioned Docker images to DockerHub.
+
+The workflow is now triggered by Git version tags instead of normal pushes to the `main` branch.
