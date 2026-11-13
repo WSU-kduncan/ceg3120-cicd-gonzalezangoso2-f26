@@ -98,3 +98,76 @@ This screenshot shows the About page served by the Docker container, confirming 
 ## Resources
 
 - [CEG3120 Project 6 Instructions](https://github.com/pattonsgirl/CEG3120/tree/main/Projects/Project6) - Used to understand the requirements and project structure.
+
+
+### Publishing the Image to DockerHub
+
+I created a public DockerHub repository to store my container images.
+
+DockerHub repository:
+[ignaciooga/ceg3120-site](https://hub.docker.com/r/ignaciooga/ceg3120-site)
+
+First, I tagged my local Docker image using my DockerHub username and repository name:
+
+```bash
+docker tag ceg3120-site:local ignaciooga/ceg3120-site:latest
+```
+
+I logged in to DockerHub using my username and a Personal Access Token with Read & Write permissions:
+
+```bash
+docker login -u ignaciooga
+```
+
+The PAT was entered at the password prompt and was not stored in the GitHub repository.
+
+Then I pushed the image to DockerHub:
+
+```bash
+docker push ignaciooga/ceg3120-site:latest
+```
+
+The image was successfully published with the `latest` tag.
+
+### Pulling and Testing the DockerHub Image
+
+To verify the published image, I used:
+
+```bash
+docker pull ignaciooga/ceg3120-site:latest
+```
+
+Then I started a new container using the DockerHub image:
+
+```bash
+docker run -d --name ceg3120-from-hub -p 8081:80 ignaciooga/ceg3120-site:latest
+```
+
+I used port 8081 because my original local container was already running on port 8080.
+
+To verify the running containers, I executed:
+
+```bash
+docker ps
+```
+
+The following screenshot shows the successful DockerHub push and pull commands and the running container using port 8081.
+
+![DockerHub pull and container test](images/dockerhub-pull-test.png)
+
+### DockerHub Image Validation
+
+**Home page from DockerHub image**
+
+The following screenshot shows the Home page running from the DockerHub image on port 8081 with the CSS applied.
+
+![DockerHub Home page](images/dockerhub-home.png)
+
+**About page from DockerHub image**
+
+This screenshot shows the About page running from the same container, confirming that both HTML pages and the CSS work.
+
+![DockerHub About page](images/dockerhub-about.png)
+
+Both pages worked correctly when running the published DockerHub image.
+
