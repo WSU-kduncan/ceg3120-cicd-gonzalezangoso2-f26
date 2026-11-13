@@ -211,3 +211,30 @@ After correcting the DockerHub authentication, I re-ran the workflow successfull
 The following screenshot shows the successful execution of GitHub Actions, including the commit SHA and the `main` branch.
 
 ![Successful GitHub Actions workflow](images/github-main-success.png)
+
+
+### Testing a Different Branch
+
+To verify that the workflow only runs on the `main` branch, I created a new branch called `test-no-ci`.
+
+I added a file called `branch-test.txt` and committed the changes.
+
+Then I pushed the new branch to GitHub using:
+
+```bash
+git push -u origin test-no-ci
+```
+
+The following screenshot shows the successful push to the test branch.
+
+![Test branch push](images/github-branch-push.png)
+
+After pushing the changes, I checked the GitHub Actions page.
+
+No new workflow run was triggered by the `test-no-ci` branch. Only the previous runs from `main` appeared.
+
+![GitHub Actions branch filtering](images/github-branch-filter.png)
+
+This confirms that the workflow is correctly configured to run only when changes are pushed to the `main` branch.
+
+After completing the test, I switched back to `main` to continue working on the project.
