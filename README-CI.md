@@ -250,6 +250,13 @@ The workflow performs these steps:
 4. Builds the Docker image using the Dockerfile.
 5. Pushes the image to `ignaciooga/ceg3120-site:latest`.
 
+### Using the Part 2 Workflow in Another Repository
+
+To use this workflow in another repository, I would need to update the DockerHub image name, configure the `DOCKER_USERNAME` and `DOCKER_TOKEN` repository secrets, and make sure the Dockerfile is in the correct location.
+
+I would also need to check that the workflow uses the correct branch name. In Part 2, the workflow was configured to run only when changes were pushed to `main`.
+
+
 ### Testing the Main Branch Trigger
 
 I pushed commit `19d9fce` to the `main` branch, which automatically triggered the workflow.
