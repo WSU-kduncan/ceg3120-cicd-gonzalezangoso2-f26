@@ -1,0 +1,2 @@
+This file is used to test GitHub Actions branch filtering.
+The workflow should only run when changes are pushed to main.
